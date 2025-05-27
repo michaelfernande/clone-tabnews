@@ -1,5 +1,5 @@
 function Home () {
-    return <h1>torresmo foi foi pros caralhos</h1>
+    return <h1>sei que temos que mudar mas eu tbm tenho medo pois não tenho como te ajudar financeiramente no momento</h1>
 }
 
 export default Home; 
