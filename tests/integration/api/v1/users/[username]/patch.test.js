@@ -9,11 +9,11 @@ beforeAll(async () => {
   await orchestrator.runPendingMigrations();
 });
 
-describe("PACTH /api/v1/users/[username]", () => {
+describe("PATCH /api/v1/users/[username]", () => {
   describe("Anonymous user", () => {
     test("With nonexistent 'username'", async () => {
       const response = await fetch(
-        "http://localhost:3000/api/v1/users/Mesmocase3",
+        "http://localhost:3000/api/v1/users/UsuarioInexistente",
         {
           method: "PATCH",
         },
@@ -64,6 +64,13 @@ describe("PACTH /api/v1/users/[username]", () => {
 
     test("With duplicated 'email'", async () => {
       await orchestrator.createUser({
+        email: "email1@curso.dev",
+      });
+
+      const createdUser2 = await orchestrator.createUser({
+        email: "email2@curso.dev",
+      });
+      await orchestrator.createUser({
         email: "email1@hotmail.com",
       });
 
@@ -72,6 +79,7 @@ describe("PACTH /api/v1/users/[username]", () => {
       });
 
       const response = await fetch(
+        `http://localhost:3000/api/v1/users/${createdUser2.username}`,
         `http://localhost:3000/api/v1/users/${createUser2.username}`,
         {
           method: "PATCH",
@@ -79,7 +87,7 @@ describe("PACTH /api/v1/users/[username]", () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: "email1@hotmail.com",
+            email: "email1@curso.dev",
           }),
         },
       );
@@ -103,6 +111,7 @@ describe("PACTH /api/v1/users/[username]", () => {
 
       const response = await fetch(
         `http://localhost:3000/api/v1/users/${createdUser.username}`,
+        `http://localhost:3000/api/v1/users/${createdUser.username}`,
         {
           method: "PATCH",
           headers: {
@@ -122,6 +131,7 @@ describe("PACTH /api/v1/users/[username]", () => {
         id: responseBody.id,
         username: "uniqueUser2",
         email: createdUser.email,
+        email: createdUser.email,
         password: responseBody.password,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
@@ -140,12 +150,15 @@ describe("PACTH /api/v1/users/[username]", () => {
       const response = await fetch(
         `http://localhost:3000/api/v1/users/${createdUser.username}`,
 
+        `http://localhost:3000/api/v1/users/${createdUser.username}`,
+
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            email: "uniqueEmail2@curso.dev",
             email: "uniqueEmail2@curso.dev",
           }),
         },
@@ -157,6 +170,8 @@ describe("PACTH /api/v1/users/[username]", () => {
 
       expect(responseBody).toEqual({
         id: responseBody.id,
+        username: createdUser.username,
+        email: "uniqueEmail2@curso.dev",
         username: createdUser.username,
         email: "uniqueEmail2@curso.dev",
         password: responseBody.password,
@@ -178,6 +193,7 @@ describe("PACTH /api/v1/users/[username]", () => {
 
       const response = await fetch(
         `http://localhost:3000/api/v1/users/${createdUser.username}`,
+        `http://localhost:3000/api/v1/users/${createdUser.username}`,
         {
           method: "PATCH",
           headers: {
@@ -195,6 +211,8 @@ describe("PACTH /api/v1/users/[username]", () => {
 
       expect(responseBody).toEqual({
         id: responseBody.id,
+        username: createdUser.username,
+        email: createdUser.email,
         username: createdUser.username,
         email: createdUser.email,
         password: responseBody.password,
